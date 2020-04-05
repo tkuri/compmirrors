@@ -23,6 +23,8 @@ import matplotlib.pyplot as plt
 import argparse
 import scipy.misc
 
+from PIL import Image
+
 parser = argparse.ArgumentParser(description='Parse arguments for the code.')
 
 parser.add_argument('-T', '--T_image', type=str,
@@ -71,8 +73,10 @@ if len(L0.shape) == 3:
     L0 = L0[:,:,2]
 
 # Resize to the specified (compatible) dimensions, and scale intensities to range [0,1] (assuming these are 8-bit images)
-T0 = scipy.misc.imresize(T0, [h, q]).astype(float) / 255
-L0 = scipy.misc.imresize(L0, [q, w]).astype(float) / 255
+# T0 = scipy.misc.imresize(T0, [h, q]).astype(float) / 255
+# L0 = scipy.misc.imresize(L0, [q, w]).astype(float) / 255
+T0 = np.array(Image.fromarray(T0).resize((q, h), resample=2)).astype(float) / 255
+L0 = np.array(Image.fromarray(L0).resize((w, q), resample=2)).astype(float) / 255
 
 # Form the input matrix
 T0L0 = T0.dot(L0)
